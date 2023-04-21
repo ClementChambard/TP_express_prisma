@@ -1,0 +1,110 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: localhost
+    url: http://localhost:3000/api/v1
+info:
+  description: Cloud TP1
+  version: '1.0.0'
+  title: Cloud TP1
+  contact:
+    email: nocompany@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: books
+    description: API pour mes bouquins
+paths:
+  /task:
+    get:
+      tags:
+        - tasks
+      summary: récupère toutes les taches
+      operationId: searchAll
+      description: récupère toutes les taches
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      tags:
+        - tasks
+      summary: creer un tache
+      operationId: create
+      description: creer un tache
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              message:
+                type: string
+    patch:
+      tags:
+        - tasks
+      summary: modifier un tache
+      operationId: create
+      description: modifier un tache
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              message:
+                type: string
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              message:
+                type: string
+    delete:
+      tags:
+        - tasks
+      summary: supprimer un tache
+      operationId: create
+      description: supprimer un tache
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              message:
+                type: string
+        '404':
+          description: NOT FOUND
+          content:
+            application/json:
+              message:
+                type: string
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - title
+        - status
+        - priority
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '71ead328-dec5-481a-89de-6da68bd52cd5'
+        title:
+          type: string
+          example: Do this
+        description:
+          type: string
+          example: Some precision about the task
+        status:
+          type: number
+          example: 0 (todo), 1 (done) ...
+        priority:
+          type: number
+          example: 0, 1, 40
