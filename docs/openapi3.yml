@@ -2,27 +2,39 @@ openapi: 3.0.0
 # Added by API Auto Mocking Plugin
 servers:
   - description: localhost
-    url: http://localhost:3000/api/v1
+    url: http://localhost:3000/api/
 info:
-  description: Cloud TP1
+  description: TP noté
   version: '1.0.0'
-  title: Cloud TP1
+  title: TP noté
   contact:
     email: nocompany@gmail.com
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-  - name: books
-    description: API pour mes bouquins
+  - name: tasks
+    description: API pour mes taches
 paths:
   /task:
     get:
-      tags:
-        - tasks
-      summary: récupère toutes les taches
-      operationId: searchAll
-      description: récupère toutes les taches
+      summary: fetch all tasks
+      operationId: findTasks
+      parameters:
+        - name: sorted
+          in: query
+          description: should the result be sorted
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          description: page to get when using pagination
+          required: false
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
@@ -33,56 +45,212 @@ paths:
                 items:
                   $ref: '#/components/schemas/Task'
     post:
-      tags:
-        - tasks
-      summary: creer un tache
-      operationId: create
-      description: creer un tache
+      summary: create a new task
+      operationId: addTask
+      requestBody:
+        description: Task to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
       responses:
-        '201':
-          description: OK
-          content:
-            application/json:
-              message:
-                type: string
-    patch:
-      tags:
-        - tasks
-      summary: modifier un tache
-      operationId: create
-      description: modifier un tache
+        '204':
+          description: success
+  /tasks/{id}:
+    get:
+      summary: get a specific task
+      operationId: findTaskById
+      parameters:
+        - name: id
+          in: path
+          description: id of the task to fetch
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
           content:
             application/json:
-              message:
-                type: string
-        '404':
-          description: NOT FOUND
-          content:
-            application/json:
-              message:
-                type: string
+              schema:
+                $ref: '#/components/schemas/Task'
     delete:
-      tags:
-        - tasks
-      summary: supprimer un tache
-      operationId: create
-      description: supprimer un tache
+      summary: delete a specific task
+      operationId: deleteTask
+      parameters:
+        - name: id
+          in: path
+          description: id of the task to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: success
+        '404':
+          description: task doesn't exist
+    patch:
+      summary: update a specific task
+      operationId: updateTask
+      parameters:
+        - name: id
+          in: path
+          description: id of the task to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated fields of task
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '204':
+          description: success
+        '404':
+          description: task doesn't exist
+  /task/tags/{taskid}:
+    post:
+      summary: add a tag to a task
+      operationId: taskAddTag
+      parameters:
+        - name: taskid
+          in: path
+          description: id of the task to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: id of the tag to add
+        required: true
+        content:
+          application/json:
+            tagId:
+              type: string
+        '204':
+          description: success
+        '404':
+          description: task or tag doesn't exist
+    delete:
+      summary: remove a tag from a task
+      operationId: taskRemoveTag
+      parameters:
+        - name: taskid
+          in: path
+          description: id of the task to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: id of the tag to remove
+        required: true
+        content:
+          application/json:
+            tagId:
+              type: string
+        '204':
+          description: success
+        '404':
+          description: task or tag doesn't exist
+  /tag:
+    get:
+      summary: fetch all tags
+      operationId: findTags
+      parameters:
+        - name: sorted
+          in: query
+          description: should the result be sorted
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          description: page to get when using pagination
+          required: false
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: OK
           content:
             application/json:
-              message:
-                type: string
-        '404':
-          description: NOT FOUND
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+    post:
+      summary: create a new tag
+      operationId: addTag
+      requestBody:
+        description: Tag to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '204':
+          description: success
+  /tags/{id}:
+    get:
+      summary: get a specific tag
+      operationId: findTagById
+      parameters:
+        - name: id
+          in: path
+          description: id of the tag to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
           content:
             application/json:
-              message:
-                type: string
+              schema:
+                $ref: '#/components/schemas/Tag'
+    delete:
+      summary: delete a specific tag
+      operationId: deleteTag
+      parameters:
+        - name: id
+          in: path
+          description: id of the tag to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: success
+        '404':
+          description: tag doesn't exist
+    patch:
+      summary: delete a specific tag
+      operationId: deleteTag
+      parameters:
+        - name: id
+          in: path
+          description: id of the tag to delete
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated fields of tag
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '204':
+          description: success
+        '404':
+          description: tag doesn't exist
 components:
   schemas:
     Task:
@@ -94,7 +262,6 @@ components:
       properties:
         id:
           type: string
-          format: uuid
           example: '71ead328-dec5-481a-89de-6da68bd52cd5'
         title:
           type: string
@@ -103,8 +270,30 @@ components:
           type: string
           example: Some precision about the task
         status:
-          type: number
+          type: integer
+          format: int32
           example: 0 (todo), 1 (done) ...
         priority:
-          type: number
+          type: integer
+          format: int32
           example: 0, 1, 40
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    Tag:
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '71ead328-dec5-481a-89de-6da68bd52cd5'
+        title:
+          type: string
+          example: this is a tag
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'

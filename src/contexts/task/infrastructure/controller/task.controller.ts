@@ -30,40 +30,52 @@ export class TaskController {
       const task = await this.getOneTaskUseCase.execute(req.params.id)
       res.status(200).json(task)
     } catch (e) {
-      res.status(404).json({ message: 'task not found' })
+      res.status(404)
     }
   }
 
   async createTask(req: Request, res: Response) {
-    await this.createTaskUseCase.execute(req.body)
-    res.status(201).json({ message: 'ok' })
+    try {
+      const tag = await this.createTaskUseCase.execute(req.body)
+      res.status(201).json(tag)
+    } catch (e) {
+      res.status(400)
+    }
   }
 
   async deleteTask(req: Request, res: Response) {
     try {
       await this.deleteTaskUseCase.execute(req.params.id)
-      res.status(200).json({ message: 'ok' })
+      res.status(204)
     } catch (e) {
-      res.status(404).json({ message: 'task not found' })
+      res.status(404)
     }
   }
 
   async updateTask(req: Request, res: Response) {
     try {
       await this.updateTaskUseCase.execute(req.params.id, req.body)
-      res.status(200).json({ message: 'ok' })
+      res.status(204)
     } catch (e) {
-      res.status(404).json({ message: 'task not found' })
+      res.status(404)
     }
   }
 
   async addTag(req: Request, res: Response) {
-    await this.addTagUseCase.execute(req.params.id, req.body.tagId)
-    res.status(200).json({ message: 'ok' })
+    try {
+      await this.addTagUseCase.execute(req.params.id, req.body.tagId)
+      res.status(204)
+    } catch (e) {
+      res.status(404)
+    }
   }
 
   async removeTag(req: Request, res: Response) {
-    await this.removeTagUseCase.execute(req.params.id, req.body.tagId)
-    res.status(200).json({ message: 'ok' })
+    try {
+      await this.removeTagUseCase.execute(req.params.id, req.body.tagId)
+      res.status(204)
+    } catch (e) {
+      res.status(404)
+    }
   }
 }

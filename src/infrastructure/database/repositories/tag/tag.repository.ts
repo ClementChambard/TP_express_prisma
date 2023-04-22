@@ -14,10 +14,14 @@ export class TagRepository implements ITagRepository {
     return tags.map(toTagRaw)
   }
 
-  async createTag(tag: TagCreateRaw): Promise<void> {
-    await this.database.client.tag.create({
-      data: tag
+  async createTag(tag: TagCreateRaw): Promise<TagRaw> {
+    const newtag = await this.database.client.tag.create({
+      data: tag,
+      include: {
+        tasks: true
+      }
     })
+    return toTagRaw(newtag)
   }
 
   async getOneTag(id: string): Promise<TagRaw> {

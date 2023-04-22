@@ -20,30 +20,34 @@ export class TagController {
       const tag = await this.getOneTagUseCase.execute(req.params.id)
       res.status(200).json(tag)
     } catch (e) {
-      res.status(404).json({ message: 'tag not found' })
+      res.status(404)
     }
   }
 
   async createTag(req: Request, res: Response) {
-    await this.createTagUseCase.execute(req.body)
-    res.status(201).json({ message: 'ok' })
+    try {
+      const tag = await this.createTagUseCase.execute(req.body)
+      res.status(201).json(tag)
+    } catch (e) {
+      res.status(400)
+    }
   }
 
   async deleteTag(req: Request, res: Response) {
     try {
       await this.deleteTagUseCase.execute(req.params.id)
-      res.status(200).json({ message: 'ok' })
+      res.status(204)
     } catch (e) {
-      res.status(404).json({ message: 'tag not found' })
+      res.status(404)
     }
   }
 
   async updateTag(req: Request, res: Response) {
     try {
       await this.updateTagUseCase.execute(req.params.id, req.body)
-      res.status(200).json({ message: 'ok' })
+      res.status(204)
     } catch (e) {
-      res.status(404).json({ message: 'tag not found' })
+      res.status(404)
     }
   }
 }

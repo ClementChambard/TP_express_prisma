@@ -7,7 +7,7 @@ export type TagUpdateRaw = TagUpdate
 export interface ITagRepository {
   getTags(): Promise<Tag[]>
   getOneTag(id: string): Promise<Tag>
-  createTag(tag: TagCreate): Promise<void>
+  createTag(tag: TagCreate): Promise<Tag>
   updateTag(id: string, data: TagUpdate): Promise<void>
   deleteTag(id: string): Promise<void>
 }

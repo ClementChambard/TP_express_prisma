@@ -20,7 +20,20 @@ export class TaskRepository implements ITaskRepository {
     })
   }
 
-  async removeTag(taskId: string, tagId: string): Promise<void> { }
+  async removeTag(taskId: string, tagId: string): Promise<void> {
+    await this.database.client.task.update({
+      where: {
+        id: taskId
+      },
+      data: {
+        tags: {
+          disconnect: {
+            id: tagId
+          }
+        }
+      }
+    })
+  }
 
   async getTasks(page: number, sorted: boolean): Promise<TaskRaw[]> {
     type getTaskParams = { take?: number; skip?: number; orderBy?: any; include: any }
@@ -34,10 +47,14 @@ export class TaskRepository implements ITaskRepository {
     return tasks.map(toTaskRaw)
   }
 
-  async createTask(task: TaskCreateRaw): Promise<void> {
-    await this.database.client.task.create({
-      data: task
+  async createTask(task: TaskCreateRaw): Promise<TaskRaw> {
+    const newtask = await this.database.client.task.create({
+      data: task,
+      include: {
+        tags: true
+      }
     })
+    return toTaskRaw(newtask)
   }
 
   async getOneTask(id: string): Promise<TaskRaw> {

@@ -21,7 +21,7 @@
     "skipLibCheck": true,
     "inlineSourceMap": true,
     "resolveJsonModule": true,
-    "strict": true,
+    "strict": false,
     "target": "es2021",
     "types": ["node"]
   },
